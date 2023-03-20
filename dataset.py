@@ -1,23 +1,16 @@
 import argparse
-import os
-import glob
-import torch
-import ast
 import numpy as np
 import pandas as pd
-from tqdm import tqdm, trange
 from torch.utils.data import Dataset, DataLoader
 import pytorch_lightning as pl
-from functools import partial
 
 class KoBARTSummaryDataset(Dataset):
     def __init__(self, file, tokenizer, max_len, ignore_index=-100):
         super().__init__()
         self.tokenizer = tokenizer
         self.max_len = max_len
-        self.docs = pd.read_csv(file, sep='\t')
+        self.docs = pd.read_csv(file)
         self.len = self.docs.shape[0]
-
         self.pad_index = self.tokenizer.pad_token_id
         self.ignore_index = ignore_index
 
