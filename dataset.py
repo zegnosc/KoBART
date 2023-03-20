@@ -34,10 +34,10 @@ class KoBARTSummaryDataset(Dataset):
     
     def __getitem__(self, idx):
         instance = self.docs.iloc[idx]
-        input_ids = self.tokenizer.encode(instance['news'])
+        input_ids = self.tokenizer.encode(instance["original"])
         input_ids = self.add_padding_data(input_ids)
 
-        label_ids = self.tokenizer.encode(instance['summary'])
+        label_ids = self.tokenizer.encode(instance["summary"])
         label_ids.append(self.tokenizer.eos_token_id)
         dec_input_ids = [self.tokenizer.eos_token_id]
         dec_input_ids += label_ids[:-1]
@@ -54,8 +54,8 @@ class KoBARTSummaryDataset(Dataset):
 class KobartSummaryModule(pl.LightningDataModule):
     def __init__(self, train_file,
                  test_file, tok,
-                 max_len=512,
-                 batch_size=8,
+                 max_len=1024,
+                 batch_size=4,
                  num_workers=4):
         super().__init__()
         self.batch_size = batch_size
