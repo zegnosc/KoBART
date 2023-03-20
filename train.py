@@ -1,12 +1,9 @@
 import argparse
 import logging
 import os
-import numpy as np
-import pandas as pd
 import pytorch_lightning as pl
 import torch
 from pytorch_lightning import loggers as pl_loggers
-from torch.utils.data import DataLoader, Dataset
 from dataset import KobartSummaryModule
 from transformers import BartForConditionalGeneration, PreTrainedTokenizerFast
 from transformers.optimization import AdamW, get_cosine_schedule_with_warmup
@@ -37,11 +34,11 @@ class ArgsBase():
 
         parser.add_argument('--batch_size',
                             type=int,
-                            default=14,
+                            default=16,
                             help='')
         parser.add_argument('--max_len',
                             type=int,
-                            default=512,
+                            default=1024,
                             help='max seq len')
         return parser
 
@@ -59,7 +56,7 @@ class Base(pl.LightningModule):
 
         parser.add_argument('--batch-size',
                             type=int,
-                            default=14,
+                            default=16,
                             help='batch size for training (default: 96)')
 
         parser.add_argument('--lr',
@@ -116,12 +113,12 @@ class Base(pl.LightningModule):
 class KoBARTConditionalGeneration(Base):
     def __init__(self, hparams, trainer=None, **kwargs):
         super(KoBARTConditionalGeneration, self).__init__(hparams, trainer, **kwargs)
-        self.model = BartForConditionalGeneration.from_pretrained('gogamza/kobart-base-v1')
+        self.model = BartForConditionalGeneration.from_pretrained('gogamza/kobart-base-v2')
         self.model.train()
         self.bos_token = '<s>'
         self.eos_token = '</s>'
         
-        self.tokenizer = PreTrainedTokenizerFast.from_pretrained('gogamza/kobart-base-v1')
+        self.tokenizer = PreTrainedTokenizerFast.from_pretrained('gogamza/kobart-base-v2')
         self.pad_token_id = self.tokenizer.pad_token_id
 
     def forward(self, inputs):
@@ -158,7 +155,7 @@ if __name__ == '__main__':
     parser = ArgsBase.add_model_specific_args(parser)
     parser = KobartSummaryModule.add_model_specific_args(parser)
     parser = pl.Trainer.add_argparse_args(parser)
-    tokenizer = PreTrainedTokenizerFast.from_pretrained('gogamza/kobart-base-v1')
+    tokenizer = PreTrainedTokenizerFast.from_pretrained('gogamza/kobart-base-v2')
     args = parser.parse_args()
     logging.info(args)
 
