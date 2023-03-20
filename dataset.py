@@ -44,9 +44,9 @@ class KoBARTSummaryDataset(Dataset):
         dec_input_ids = self.add_padding_data(dec_input_ids)
         label_ids = self.add_ignored_data(label_ids)
 
-        return {'input_ids': np.array(input_ids, dtype=np.int_),
-                'decoder_input_ids': np.array(dec_input_ids, dtype=np.int_),
-                'labels': np.array(label_ids, dtype=np.int_)}
+        return {'input_ids': np.array(input_ids, dtype=np.int64),
+                'decoder_input_ids': np.array(dec_input_ids, dtype=np.int64),
+                'labels': np.array(label_ids, dtype=np.int64)}
 
     def __len__(self):
         return self.len
